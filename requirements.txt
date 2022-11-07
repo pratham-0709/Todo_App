@@ -1,0 +1,4 @@
+Django
+djangorestframework
+db-sqlite3
+django-crispy-forms
