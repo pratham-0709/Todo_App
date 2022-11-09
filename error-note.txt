@@ -1,0 +1,29 @@
+#when running docker container on jenkins agent run these steps so that it would work properly 
+
+# Prerequisites 
+# Docker Should Be Installed Properly and Running 
+
+adduser jenkins 
+
+cat /etc/passwd 
+
+usermod -aG docker jenkins 
+
+vi /usr/lib/systemd/system/docker.service
+
+ExecStart=/usr/bin/docker daemon -H unix:// -H tcp://localhost:2375
+# Add This Line at the end of the file 
+
+chmod 666 /var/run/docker.sock #it work on linux base system
+
+# Daemon Reload 
+
+systemctl daemon-reload
+
+#Docker Reload
+
+systemctl restart docker 
+
+#After All This Just Reload Jenkins Server 
+
+systemctl restart jenkins 
