@@ -1,26 +1,37 @@
 pipeline{
-    agent any
+    agent {
+        node {
+            label 'Linux'
+        }
+    }
     environment {
-    registry = "monsternex007/docker-test"
-    registryCredential = 'Dockerhub'
-    dockerImage = ''
-  }
+        registry = 'monsternex007/todos-app'
+        registryCredential = 'Dockerhub'
+        dockerImage = ''
+    }
     stages{
-        stage("GATHER") {
+        stage("Gather"){
             steps{
                 git 'https://github.com/pratham-0709/Todo_App.git'
-                sh 'ls -la'
-                sh 'sleep 5'
+                sh 'sudo ls -la'
+                sh 'sudo sleep 5'
             }
         }
-        stage("BUILD") {
+        stage("Build"){
             steps{
                 script {
-                dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
                 }
             }
         }
-        stage("PUSH TO REGISTRY") {
+        stage("Deploy"){
+            steps{
+              sh 'sudo docker images'
+              sh 'sudo docker run --name TodoApp -p 8000:8000 -d "$registry:$BUILD_NUMBER"'
+              sh 'sudo docker ps'  
+            }
+        }
+        stage("PUSH TO REGISTRY"){
             steps{
                 script{
                     withDockerRegistry(credentialsId: 'DockerHubDetails') 
@@ -30,11 +41,13 @@ pipeline{
                 }
             }
         }
-        stage("DEPLOY"){
-            steps{
-                sh "docker rmi $registry:$BUILD_NUMBER"
-            }
+    }
+    post{
+        success{
+            echo "Deployment Success"
+        }
+        failure{
+            echo "Deployment Failed"
         }
     }
 }
-
