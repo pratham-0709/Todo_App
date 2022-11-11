@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app
+  labels:
+    app: todo
+spec:
+  selector:
+    matchLabels:
+      app: todo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: todo
+    spec:
+      containers:
+      - image: monsternex007/todos-app:2
+        name: todo-app
+        ports:
+        - containerPort: 8000
+          name: todo
+---
+# Creating A Service For Todo-App
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-app
+  labels:
+    app: todo
+spec:
+  ports:
+    - port: 8000
+  selector:
+    app: todo
+  type: NodePort
