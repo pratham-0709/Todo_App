@@ -16,7 +16,7 @@ spec:
         app: todo
     spec:
       containers:
-      - image: monsternex007/todos-app:2
+      - image: monsternex007/todo1-app1:1
         name: todo-app
         ports:
         - containerPort: 8000
