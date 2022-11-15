@@ -1,0 +1,16 @@
+---
+- name: Playbook to build and run Docker
+  hosts: all
+  become: true
+  gather_facts: false
+ 
+  tasks:
+    - name: Run Docker container using simple-docker-image
+      docker_container:
+        name: App-Container
+        image: monsternex007/todo1-app1:7
+        state: started
+        recreate: yes
+        detach: true
+        ports:
+          - "8000:8000"
